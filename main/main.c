@@ -2,30 +2,54 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "sra_board.h"
-
-void app_main()
-{
-    ESP_ERROR_CHECK(enable_bar_graph());
-    // enable_bar_graph() turns on the gpio pins, if it succeeds it returns ESP_OK else it returns ESP_FAIL
-    // If the argument of ESP_ERROR_CHECK() is not equal ESP_OK, then an error message is printed on the console, and abort() is called. 
-    
-
-    while(1)
-    {
-        //blinks all the 8 leds 5 times
-        for (int i = 0; i < 5; i++)
-        {
-            ESP_ERROR_CHECK(set_bar_graph(0xFF));
-            //0xFF = 1111 1111(all leds are on)
-            // setting values of all 8 leds to 1
-            vTaskDelay(1000 / portTICK_RATE_MS);
-            //delay of 1s
-            ESP_ERROR_CHECK(set_bar_graph(0x00));
-            //0x00 = 0000 0000(all leds are off)
-            // setting values of all 8 leds to 0
-            vTaskDelay(1000 / portTICK_RATE_MS);
-            //delay of 1s
+static TaskHandle_t xtask1;
+static TaskHandle_t xtask2;
+static TaskHandle_t xtask3;
+void task_handler(){
+    enable_switches();
+    while(1){
+        if(read_switch(SWITCH_1)){
+            vTaskSuspend(xtask2);
+            vTaskResume(xtask1);
         }
+        else if(read_switch(SWITCH_2)){
+            vTaskSuspend(xtask1);
+            vTaskResume(xtask2);
+        }
+    }
+}
+void blink_fibonacci(){
+        uint8_t var = 0x01;
+        //0x01 = 0000 0001(only 8th led is on)
+        // After left-shifting 0x01 8-times, we end up with 0x00. To recover the var variable, we initialise it with 0x01.
+        int a=0;
+        int b=1;
+        int c=a+b;
+        while(1)
+        {   
+            if(c>13){
+                var=0x01;
+                a=0;
+                b=1;
+                c=a+b;
+            }
+             ESP_ERROR_CHECK(set_bar_graph(var));
+             vTaskDelay(1000 / portTICK_RATE_MS);
+             ESP_ERROR_CHECK(set_bar_graph(0));
+             vTaskDelay(1000 / portTICK_RATE_MS);
+             for(int i=0;i<c-b;i++){
+                var=var<<1;
+                var=var+1;
+             }
+             a=b;
+             b=c;
+             c=a+b;
+        }
+    
+}
+
+void blink_sequential(){
+   
 
         uint8_t var = 0x01;
         //0x01 = 0000 0001(only 8th led is on)
@@ -49,5 +73,19 @@ void app_main()
             vTaskDelay(1000 / portTICK_PERIOD_MS);
             //delay of 1s
         }
-    }
+    
+}
+
+void app_main()
+{
+    ESP_ERROR_CHECK(enable_bar_graph());
+    // enable_bar_graph() turns on the gpio pins, if it succeeds it returns ESP_OK else it returns ESP_FAIL
+    // If the argument of ESP_ERROR_CHECK() is not equal ESP_OK, then an error message is printed on the console, and abort() is called. 
+    // xTaskCreate -> Create a new task and add it to the list of tasks that are ready to run
+	xTaskCreate(&blink_sequential, "blink_sequential", 4096, NULL, 1, &xtask1);
+    xTaskCreate(&blink_fibonacci, "blink_fibonacci", 4096, NULL, 1, &xtask2);
+    xTaskCreate(&task_handler, "task handler", 4096,NULL,0,&xtask3 );
+    vTaskSuspend(xtask1);
+    vTaskSuspend(xtask2);
+
 }
