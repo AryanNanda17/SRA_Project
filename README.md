@@ -1,34 +1,91 @@
-LED BLINK
-============
+# Multi_Code_ESP 
 
-![LED blinking](https://pic-microcontroller.com/wp-content/uploads/2015/10/A-complete-guide-for-LED-Blinking.jpg)
+Switching between two tasks using switches of SRA board.
 
-TABLE OF CONTENTS
-1. [What is a LED?](#des)
-2. [How does a LED blinks?](#how)
-3. [Circuit Diagram](#cktd)
+## Table of Contents
 
-<a name="des"></a>
-What is a LED?
------------------
-<p><strong><em>Light Emitting Diode</em></strong> is a device that produces light on electrical and electronic devices.<br> It is a light sensor which emits light that is reflected from surface which further helps in sensing the environment.</p>
+- [Multi_Code_ESP ](#Multi_Code_ESP)
+  - [Table of Contents](#table-of-contents)
+  - [Demonstration](#demonstration)
+  - [About the Project](#about-the-project)
+    - [Tech Stack](#tech-stack)
+    - [File Structure](#file-structure)
+      - [Switches](#switches)
+    - [How to use](#how-to-use)
+      - [Prerequisites](#prerequisites)
+      - [Installation](#installation)
+  - [Contributors](#contributors)
+  - [Acknowledgements and Resources](#acknowledgements-and-resources)
 
-<a name="how"></a>
-How does a LED blinks?
----------------------
-There are several ways of making a blinking LED circuit.
+## Demonstration
 
-<ul>
-  <li>A relay</li>
-  <li>A transistors</li>
-  <li>An inverter (a logic NOT-gate)</li>
-  <li>PWM</li>
-</ul>
+## About the Project
 
-![LED blinking with ESP32](https://content.instructables.com/ORIG/F90/E6L0/JTWT5IR7/F90E6L0JTWT5IR7.jpg?crop=1%3A1&frame=1&width=320)
+### Tech Stack
 
-<a name="cktd"></a>
+This project uses the [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/) development framework.
 
-Circuit Diagram
-----------------
-![ckt](https://user-images.githubusercontent.com/70626983/108228025-7ba4d380-7164-11eb-8662-e6fbaa5f42f4.png)
+It uses [FreeRTOS](https://www.freertos.org/openrtos.html).
+
+### File Structure
+
+```
+.
+├── CMakeLists.txt
+├── README.md
+├── components
+│   └── sra-board-component
+├── main
+│   ├── CMakeLists.txt
+│   ├── component.mk
+│   └── main.c
+└── sdkconfig
+```
+
+
+#### Switches
+ 
+* `Switch_1` for running **blink_sequential** task
+* `Switch_2` for running **blink_fibonacci**  task
+
+
+
+### How to use
+
+#### Prerequisites
+
+Install ESP-IDF : https://github.com/espressif/esp-idf
+
+#### Installation
+
+Clone the project
+
+```sh
+git clone https://github.com/AryanNanda17/SRA_Project --recursive
+cd multi_code_esp
+```
+
+Building the project
+
+```sh
+idf.py build
+```
+
+Flash
+
+```sh
+idf.py -p (PORT) flash monitor
+```
+---
+
+## Contributors
+
+- [Aryan](https://github.com/AryanNanda17)
+
+
+## Acknowledgements and Resources
+- [SRA VJTI](https://github.com/SRA-VJTI)
+- [SRA Wall-E Workshop](https://github.com/SRA-VJTI/Wall-E_v2.2)
+- Special thanks to [Zain Siddavatam](https://github.com/SuperChamp234)
+- https://github.com/espressif/esp-idf/tree/release/v4.2/examples/protocols/http_server
+- https://github.com/Molorius/esp32-websocket/
