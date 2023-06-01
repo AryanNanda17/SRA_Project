@@ -1,6 +1,6 @@
 # Multi_Code_ESP 
 
-Switching between two tasks using switches of SRA board.
+Bind any two tasks to any two switches of SRA-Board.
 
 ## Table of Contents
 
@@ -10,10 +10,11 @@ Switching between two tasks using switches of SRA board.
   - [About the Project](#about-the-project)
     - [Tech Stack](#tech-stack)
     - [File Structure](#file-structure)
-      - [Switches](#switches)
+      - [Data Handling](#data-handling)
     - [How to use](#how-to-use)
       - [Prerequisites](#prerequisites)
       - [Installation](#installation)
+      - [Binding](#binding)
   - [Contributors](#contributors)
   - [Acknowledgements and Resources](#acknowledgements-and-resources)
 
@@ -33,39 +34,80 @@ It uses [FreeRTOS](https://www.freertos.org/openrtos.html).
 .
 ├── CMakeLists.txt
 ├── README.md
-├── components
-│   └── sra-board-component
-├── main
-│   ├── CMakeLists.txt
-│   ├── component.mk
-│   └── main.c
-└── sdkconfig
+├── include
+│   └── multicode_esp.h
+└── main
+    ├── CMakeLists.txt
+    ├── component.mk
+    └── main.c
+
 ```
 
+### Data Handling
+Struct is used to store User's Input
 
-#### Switches
- 
-* `Switch_1` for running **blink_sequential** task
-* `Switch_2` for running **blink_fibonacci**  task
+```c++
+typedef struct{
+    int switchno1;
+    int switchno2;
+    fptr funtask1;
+    fptr funtask2;
 
-
-
+}bind;
+```
 ### How to use
 
 #### Prerequisites
 
 Install ESP-IDF : https://github.com/espressif/esp-idf
+ 
+SRA-Board Component: https://github.com/SRA-VJTI/sra-board-component.git
 
 #### Installation
 
 Clone the project
 
 ```sh
-git clone https://github.com/AryanNanda17/SRA_Project --recursive
-cd multi_code_esp
+ - git clone https://github.com/AryanNanda17/multi_code_esp.git --recursive
+    - cd multi_code_esp
+       - git clone  https://github.com/SRA-VJTI/sra-board-component.git
+
+```
+
+#### Binding
+
+-Call bindTask function and bind your tasks to switches of sra-board.
+
+
+#### **bindTask Function details**
+
+It takes four Parameters.
+
+**First Parameter**-  Switch number you want your first task to be bound with.
+
+**Second Parameter**- Switch number you want your second task to be bound with.
+
+**Third Parameter**-  Task 1 function.
+
+**Fourth Parameter**- Task 2 function.
+```c++
+void bindTask(int n1,int n2, void (*inputfun1)(), void (*inputfun2)())
+
+```
+
+-Create a Task of manageTask
+
+Once the tasks have been bound, the user needs to start the main management of the tasks using the buttons by simply creating a task of the function manageTasks()
+
+```
+  xTaskCreate(manageTasks, "multi_code_esp", 4096, NULL, 1, NULL);
 ```
 
 Building the project
+
+```sh
+get_idf
+```
 
 ```sh
 idf.py build
@@ -83,9 +125,8 @@ idf.py -p (PORT) flash monitor
 - [Aryan](https://github.com/AryanNanda17)
 
 
-## Acknowledgements and Resources
+## Acknowledgements
 - [SRA VJTI](https://github.com/SRA-VJTI)
 - [SRA Wall-E Workshop](https://github.com/SRA-VJTI/Wall-E_v2.2)
 - Special thanks to [Zain Siddavatam](https://github.com/SuperChamp234)
-- https://github.com/espressif/esp-idf/tree/release/v4.2/examples/protocols/http_server
-- https://github.com/Molorius/esp32-websocket/
+
