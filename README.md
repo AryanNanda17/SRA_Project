@@ -1,6 +1,6 @@
 # Multi_Code_ESP 
 
-Bind any two tasks to any two switches of SRA-Board.
+>Bind any two tasks to any two switches of SRA-Board.
 
 ## Table of Contents
 
@@ -24,9 +24,9 @@ Bind any two tasks to any two switches of SRA-Board.
 
 ### Tech Stack
 
-This project uses the [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/) development framework.
+> This project uses the [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/) development framework.
 
-It uses [FreeRTOS](https://www.freertos.org/openrtos.html).
+> It uses [FreeRTOS](https://www.freertos.org/openrtos.html).
 
 ### File Structure
 
@@ -44,7 +44,7 @@ It uses [FreeRTOS](https://www.freertos.org/openrtos.html).
 ```
 
 ### Data Handling
-Struct is used to store User's Input
+>Struct is used to store User's Input
 
 ```c++
 typedef struct{
@@ -55,6 +55,8 @@ typedef struct{
 
 }bind;
 ```
+
+Task is made from the data given by the user and the task is then, bound to the switches of SRA Board.
 ### How to use
 
 #### Prerequisites
@@ -67,21 +69,22 @@ SRA-Board Component: https://github.com/SRA-VJTI/sra-board-component.git
 
 Clone the project
 
-```sh
- - git clone https://github.com/AryanNanda17/multi_code_esp.git --recursive
-    - cd multi_code_esp
-       - git clone  https://github.com/SRA-VJTI/sra-board-component.git
 
+>Make a Components folder in your project and clone multi_code_esp and SRA Board component in it.
 ```
+  - git clone https://github.com/AryanNanda17/multi_code_esp.git --recursive
 
+  - git clone  https://github.com/SRA-VJTI/sra-board-component.git
+```
+  
 #### Binding
 
--Call bindTask function and bind your tasks to switches of sra-board.
+-Call bindTask function and bind your tasks to switches   sra-board.
 
 
 #### **bindTask Function details**
 
-It takes four Parameters.
+>It takes four Parameters.
 
 **First Parameter**-  Switch number you want your first task to be bound with.
 
@@ -102,7 +105,8 @@ Once the tasks have been bound, the user needs to start the main management of t
 ```
   xTaskCreate(manageTasks, "multi_code_esp", 4096, NULL, 1, NULL);
 ```
-
+---
+---
 Building the project
 
 ```sh
